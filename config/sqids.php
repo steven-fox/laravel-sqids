@@ -3,14 +3,25 @@
 // Config for StevenFox/LaravelSqids
 
 return [
+    // Specify the default Sqid configuration.
+    'default' => 'primary',
 
-    // Randomize IDs by specifying a custom alphabet.
-    'alphabet' => env('SQIDS_ALPHABET', 'MGZAJbNxVrhm5Sz47URHwXQf1FPgvlc2ptjY9uLEianODyKCosBIkd0q3W6eT8'),
+    // Specify one or more Sqid configurations that can be called from the Sqidder.
+    'sqids' => [
+        'primary' => [
+            // Randomize IDs by specifying a custom/shuffled alphabet.
+            'alphabet' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
 
-    // Enforce a minimum length for IDs.
-    'min_length' => env('SQIDS_MIN_LENGTH', 0),
+            // Enforce a minimum length for the encoded Sqid.
+            'minLength' => 0,
+        ],
+        'other' => [
+            'alphabet' => 'MGZAJbNxVrhm5Sz47URHwXQf1FPgvlc2ptjY9uLEianODyKCosBIkd0q3W6eT8',
+            'minLength' => 0,
+        ],
+    ],
 
-    // Prevent specific words from appearing anywhere in the auto-generated IDs.
+    // Prevent specific words from appearing anywhere in the encoded Sqids.
     'blocklist' => [
         '0rgasm',
         '1d10t',

@@ -52,7 +52,7 @@ php artisan vendor:publish --tag="laravel-sqids-views"
 ## Usage
 
 ```php
-$laravelSqids = new StevenFox\LaravelSqids();
+$laravelSqids = new StevenFox\Sqidder();
 echo $laravelSqids->echoPhrase('Hello, StevenFox!');
 ```
 
