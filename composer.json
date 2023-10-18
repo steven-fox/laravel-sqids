@@ -4,7 +4,11 @@
     "keywords": [
         "steven-fox",
         "laravel",
-        "laravel-sqids"
+        "laravel-sqids",
+        "sqid",
+        "sqids",
+        "hashid",
+        "hashids"
     ],
     "homepage": "https://github.com/steven-fox/laravel-sqids",
     "license": "MIT",
