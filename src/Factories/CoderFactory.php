@@ -1,11 +1,13 @@
 <?php
 
-namespace StevenFox\LaravelSqids;
+namespace StevenFox\LaravelSqids\Factories;
 
 use Sqids\Sqids;
 use Sqids\SqidsInterface;
+use StevenFox\LaravelSqids\Config\SqidConfiguration;
+use StevenFox\LaravelSqids\Contracts\CoderFactory as CoderFactoryInterface;
 
-class CoderFactory
+class CoderFactory implements CoderFactoryInterface
 {
     public function __construct()
     {

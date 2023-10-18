@@ -1,15 +1,21 @@
 <?php
 
-namespace StevenFox\LaravelSqids;
+namespace StevenFox\LaravelSqids\Config;
 
 use Illuminate\Contracts\Config\Repository;
+use StevenFox\LaravelSqids\Contracts\ConfigRepository as ConfigRepositoryInterface;
 use StevenFox\LaravelSqids\Exceptions\DefaultSqidConfigurationNotSetException;
 use StevenFox\LaravelSqids\Exceptions\NamedSqidConfigurationNotFoundException;
 
-readonly class ConfigRepository
+readonly class ConfigRepository implements ConfigRepositoryInterface
 {
     public function __construct(private Repository $config)
     {
+    }
+
+    public function hasSqidConfig(string $name): bool
+    {
+        return filled($this->getConfigValue('sqids.'.$name));
     }
 
     public function getSqidConfig(string $name): SqidConfiguration
@@ -28,6 +34,17 @@ readonly class ConfigRepository
         );
     }
 
+    public function setSqidConfig(SqidConfiguration $config): ConfigRepositoryInterface
+    {
+        return $this->setConfigValue(
+            'sqids.'.$config->name,
+            [
+                'alphabet' => $config->alphabet,
+                'minLength' => $config->minLength,
+            ]
+        );
+    }
+
     /**
      * @return string[]
      */
@@ -43,8 +60,12 @@ readonly class ConfigRepository
         return $key ?: throw DefaultSqidConfigurationNotSetException::make();
     }
 
-    public function setDefaultSqidConfigKey(string $name): static
+    public function setDefaultSqidConfigKey(string $name): ConfigRepositoryInterface
     {
+        if (! $this->hasSqidConfig($name)) {
+            throw NamedSqidConfigurationNotFoundException::make($name);
+        }
+
         $this->config->set($this->rootConfigName().'.default', $name);
 
         return $this;
@@ -62,8 +83,15 @@ readonly class ConfigRepository
         return 'sqids';
     }
 
-    private function getConfigValue(string $path, mixed $default = null): mixed
+    public function getConfigValue(string $path, mixed $default = null): mixed
     {
         return $this->config->get($this->rootConfigName().'.'.$path, $default);
+    }
+
+    public function setConfigValue(string $path, mixed $value): ConfigRepositoryInterface
+    {
+        $this->config->set($this->rootConfigName().'.'.$path, $value);
+
+        return $this;
     }
 }

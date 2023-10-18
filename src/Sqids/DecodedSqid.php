@@ -4,9 +4,9 @@ namespace StevenFox\LaravelSqids\Sqids;
 
 use Illuminate\Support\Collection;
 use Sqids\SqidsInterface;
+use StevenFox\LaravelSqids\Config\SqidConfiguration;
 use StevenFox\LaravelSqids\Contracts\SqidsManager;
 use StevenFox\LaravelSqids\Exceptions\DecodedSqidCannotBeCastToIntException;
-use StevenFox\LaravelSqids\SqidConfiguration;
 
 class DecodedSqid
 {
@@ -27,29 +27,42 @@ class DecodedSqid
      */
     public static function newFromArray(array $numbers, string $sqidConfigName = null): static
     {
+        /** @var SqidsManager $sqidsManager */
         $sqidsManager = app(SqidsManager::class);
+        $coder = blank($sqidConfigName)
+            ? $sqidsManager->coderForDefaultConfig()
+            : $sqidsManager->coderForSqidConfigName($sqidConfigName);
 
         return new static(
             $numbers,
-            $sqidsManager->coderForSqidConfig($sqidConfigName),
+            $coder,
             $sqidsManager,
         );
     }
 
-    public function usingSqidConfigName(string $configName = null): static
+    public function usingDefaultConfig(): static
     {
         return new static(
             $this->numbers,
-            $this->sqidsManager->coderForSqidConfig($configName),
+            $this->sqidsManager->coderForDefaultConfig(),
             $this->sqidsManager,
         );
     }
 
-    public function usingSqidConfig(SqidConfiguration $sqidConfiguration = null): static
+    public function usingConfigName(string $configName): static
     {
         return new static(
             $this->numbers,
-            $this->sqidsManager->coderForSqidConfig($sqidConfiguration?->name),
+            $this->sqidsManager->coderForSqidConfigName($configName),
+            $this->sqidsManager,
+        );
+    }
+
+    public function usingConfig(SqidConfiguration $sqidConfiguration): static
+    {
+        return new static(
+            $this->numbers,
+            $this->sqidsManager->coderForSqidConfig($sqidConfiguration),
             $this->sqidsManager,
         );
     }
@@ -84,13 +97,6 @@ class DecodedSqid
     public function toString(): string
     {
         return (string) $this;
-    }
-
-    public function dd()
-    {
-        dd([
-            'numbers' => $this->numbers,
-        ]);
     }
 
     public function __toString(): string
