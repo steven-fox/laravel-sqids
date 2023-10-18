@@ -4,11 +4,12 @@ namespace StevenFox\LaravelSqids\Sqids;
 
 use Sqids\SqidsInterface;
 use StevenFox\LaravelSqids\Config\SqidConfiguration;
+use StevenFox\LaravelSqids\Contracts\DecodesSqids;
 use StevenFox\LaravelSqids\Contracts\SqidsManager;
 use StevenFox\LaravelSqids\Exceptions\EncodedSqidDecodesToBlankException;
 use StevenFox\LaravelSqids\Exceptions\EncodedSqidIsNotCanonicalException;
 
-class EncodedSqid
+class EncodedSqid implements DecodesSqids
 {
     public function __construct(
         private string $id,
@@ -72,7 +73,7 @@ class EncodedSqid
         );
     }
 
-    public function validate(): self
+    public function validate(): static
     {
         if ($this->isNotCanonical()) {
             throw EncodedSqidIsNotCanonicalException::make($this);
@@ -85,7 +86,7 @@ class EncodedSqid
         return $this;
     }
 
-    public function canonical(): self
+    public function canonical(): static
     {
         return $this->decode(false)->encode();
     }
@@ -108,11 +109,6 @@ class EncodedSqid
     public function id(): string
     {
         return $this->id;
-    }
-
-    public function toString(): string
-    {
-        return (string) $this;
     }
 
     public function __toString(): string

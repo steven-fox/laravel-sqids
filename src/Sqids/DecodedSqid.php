@@ -2,13 +2,13 @@
 
 namespace StevenFox\LaravelSqids\Sqids;
 
-use Illuminate\Support\Collection;
 use Sqids\SqidsInterface;
 use StevenFox\LaravelSqids\Config\SqidConfiguration;
+use StevenFox\LaravelSqids\Contracts\EncodesSqids;
 use StevenFox\LaravelSqids\Contracts\SqidsManager;
 use StevenFox\LaravelSqids\Exceptions\DecodedSqidCannotBeCastToIntException;
 
-class DecodedSqid
+class DecodedSqid implements EncodesSqids
 {
     public function __construct(
         private array $numbers,
@@ -92,15 +92,5 @@ class DecodedSqid
         }
 
         return $number;
-    }
-
-    public function toString(): string
-    {
-        return (string) $this;
-    }
-
-    public function __toString(): string
-    {
-        return Collection::make($this->numbers())->join(', ');
     }
 }

@@ -99,9 +99,8 @@ it('can provide access to its internal id', function () {
 it('can be casted to a string', function () {
     $sqid = EncodedSqid::new('Ko');
 
-    expect($sqid->toString())
-        ->toBe('Ko')
-        ->and((string) $sqid)->toBe('Ko');
+    expect((string) $sqid)
+        ->toBe('Ko');
 });
 
 it('can validate its id for non canonical values', function () {

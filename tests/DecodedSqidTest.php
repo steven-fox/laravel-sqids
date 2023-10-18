@@ -94,13 +94,3 @@ it('will throw an exception when converting to an int for a sqid containing non 
 
     $sqid->toInt();
 });
-
-it('can be cast to a string by joining the numbers into a csv list', function () {
-    $sqid = DecodedSqid::new(1, 2, 3);
-    expect($sqid->toString())->toBe('1, 2, 3')
-        ->and((string) $sqid)->toBe('1, 2, 3');
-
-    $sqid = DecodedSqid::new(1);
-    expect($sqid->toString())->toBe('1')
-        ->and((string) $sqid)->toBe('1');
-});
