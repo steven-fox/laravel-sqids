@@ -1,13 +1,13 @@
 <?php
 
-use StevenFox\LaravelSqids\Config\SqidConfiguration;
 use StevenFox\LaravelSqids\Exceptions\EncodedSqidIsNotCanonicalException;
 use StevenFox\LaravelSqids\Sqids\DecodedSqid;
 use StevenFox\LaravelSqids\Sqids\EncodedSqid;
 
 it('can decode using the default configuration', function () {
-    $sqid = EncodedSqid::new('Uk')
-        ->usingDefaultConfig();
+    $sqid = new EncodedSqid('Uk');
+
+    expect($sqid::CONFIG_NAME)->toBeNull();
 
     $decoded = $sqid->decode();
 
@@ -16,7 +16,7 @@ it('can decode using the default configuration', function () {
         ->and($decoded->numbers())->toEqual([1]);
 });
 
-it('can be instantiated via the new method, without passing a config, to use the default config', function () {
+it('can be instantiated via the new method to use the default config', function () {
     $sqid = EncodedSqid::new('Uk');
 
     expect($sqid)
@@ -24,70 +24,12 @@ it('can be instantiated via the new method, without passing a config, to use the
         ->and($sqid->decode()->numbers())->toBe([1]);
 });
 
-it('can be instantiated via the new method and a specified config name', function () {
-    $sqid = EncodedSqid::new('aa', 'other');
-
-    expect($sqid)
-        ->toBeInstanceOf(EncodedSqid::class)
-        ->and($sqid->id())->toBe('aa')
-        ->and($sqid->decode()->numbers())->toBe([1]);
-});
-
-it('can decode using a specific configuration name after instantiation', function () {
-    $sqid = EncodedSqid::new('aa')
-        ->usingConfigName('other');
-
-    $decoded = $sqid->decode();
-
-    expect($decoded)
-        ->toBeInstanceOf(DecodedSqid::class)
-        ->and($decoded->numbers())->toEqual([1]);
-});
-
-it('can decode using a specific configuration object', function () {
-    $sqid = EncodedSqid::new('yy')
-        ->usingConfig(new SqidConfiguration(
-            'foo',
-            'xyz',
-            0,
-            []
-        ));
-
-    $decoded = $sqid->decode();
-
-    expect($decoded)
-        ->toBeInstanceOf(DecodedSqid::class)
-        ->and($decoded->numbers())->toEqual([1]);
-});
-
-it('can decode without validation for ids that include values not existing in the decoding alphabet', function () {
-    $invalidSqid = EncodedSqid::new('aaa')
-        ->usingConfig(new SqidConfiguration(
-            'foo',
-            'xyz',
-            0,
-            []
-        ));
+it('can decode without validation', function () {
+    $invalidSqid = EncodedSqid::new('a');
 
     $decoded = $invalidSqid->decode(false);
 
     expect($decoded->numbers())->toBe([]);
-});
-
-it('can decode without validation for ids are not canonical', function () {
-    $invalidSqid = EncodedSqid::new('xx')
-        ->usingConfig(new SqidConfiguration(
-            'foo',
-            'xyz',
-            0,
-            []
-        ));
-
-    $decoded = $invalidSqid->decode(false);
-    $reEncoded = $decoded->encode();
-
-    expect($decoded->numbers())->toBe([1])
-        ->and($reEncoded->id())->toBe('yy'); // Does not match original id of 'aaa'.
 });
 
 it('can provide access to its internal id', function () {

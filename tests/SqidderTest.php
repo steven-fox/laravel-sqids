@@ -1,10 +1,8 @@
 <?php
 
 use Sqids\SqidsInterface;
-use StevenFox\LaravelSqids\Config\ConfigRepository;
-use StevenFox\LaravelSqids\Config\SqidConfiguration;
-use StevenFox\LaravelSqids\Contracts\SqidsManager;
-use StevenFox\LaravelSqids\Factories\CoderFactory;
+use StevenFox\LaravelSqids\Contracts\CoderFactory;
+use StevenFox\LaravelSqids\Contracts\ConfigBasedSqidder;
 use StevenFox\LaravelSqids\Sqidder;
 
 /**
@@ -12,8 +10,7 @@ use StevenFox\LaravelSqids\Sqidder;
  */
 beforeEach(function () {
     $this->sqidder = new Sqidder(
-        new ConfigRepository(config()),
-        new CoderFactory(),
+        app(CoderFactory::class),
     );
 });
 
@@ -21,8 +18,8 @@ it('implements the SqidsInterface interface', function () {
     expect($this->sqidder)->toBeInstanceOf(SqidsInterface::class);
 });
 
-it('implements the SqidsManager interface', function () {
-    expect($this->sqidder)->toBeInstanceOf(class: SqidsManager::class);
+it('implements the ConfigBasedSqidder interface', function () {
+    expect($this->sqidder)->toBeInstanceOf(class: ConfigBasedSqidder::class);
 });
 
 it('can encode an array of numbers using the default config', function () {
@@ -35,33 +32,20 @@ it('can decode a sqid using the default config', function () {
         ->and($this->sqidder->decode('86Rf07'))->toBe([1, 2, 3]);
 });
 
-it('can provide a coder for the default config', function () {
-    $coder = $this->sqidder->coderForDefaultConfig();
-
-    expect($coder)->toBeInstanceOf(SqidsInterface::class)
-        ->and($coder->encode([1]))->toBe('Uk')
-        ->and($coder->decode('Uk'))->toBe([1]);
-});
-
 it('can provide a coder for a specific config name', function () {
-    $coder = $this->sqidder->coderForSqidConfigName('other');
+    $coder = $this->sqidder->forConfig('other');
 
     expect($coder)->toBeInstanceOf(SqidsInterface::class)
         ->and($coder->encode([1]))->toBe('aa')
         ->and($coder->decode('aa'))->toBe([1]);
 });
 
-it('can provide a coder for a specific config object', function () {
-    $coder = $this->sqidder->coderForSqidConfig(new SqidConfiguration(
-        'foo',
-        'xyz',
-        0,
-        [],
-    ));
+it('will use the default config when a null value is passed to the forConfig method', function () {
+    $coder = $this->sqidder->forConfig();
 
     expect($coder)->toBeInstanceOf(SqidsInterface::class)
-        ->and($coder->encode([1]))->toBe('yy')
-        ->and($coder->decode('yy'))->toBe([1]);
+        ->and($coder->encode([1]))->toBe('Uk')
+        ->and($coder->decode('Uk'))->toBe([1]);
 });
 
 it('has a facade', function () {

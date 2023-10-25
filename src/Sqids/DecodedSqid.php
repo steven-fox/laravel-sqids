@@ -2,19 +2,21 @@
 
 namespace StevenFox\LaravelSqids\Sqids;
 
-use Sqids\SqidsInterface;
-use StevenFox\LaravelSqids\Config\SqidConfiguration;
-use StevenFox\LaravelSqids\Contracts\EncodesSqids;
-use StevenFox\LaravelSqids\Contracts\SqidsManager;
+use StevenFox\LaravelSqids\Contracts\ConfigBasedSqidder;
 use StevenFox\LaravelSqids\Exceptions\DecodedSqidCannotBeCastToIntException;
 
-class DecodedSqid implements EncodesSqids
+class DecodedSqid
 {
+    public const CONFIG_NAME = null;
+
+    protected ConfigBasedSqidder $sqidder;
+
     public function __construct(
-        private array $numbers,
-        private SqidsInterface $encoder,
-        private SqidsManager $sqidsManager,
+        protected array $numbers,
+        ConfigBasedSqidder $sqidder = null,
     ) {
+        $sqidder ??= app(ConfigBasedSqidder::class);
+        $this->sqidder = $sqidder->forConfig(static::CONFIG_NAME);
     }
 
     public static function new(int ...$numbers): static
@@ -25,54 +27,15 @@ class DecodedSqid implements EncodesSqids
     /**
      * @param  int[]  $numbers
      */
-    public static function newFromArray(array $numbers, string $sqidConfigName = null): static
+    public static function newFromArray(array $numbers): static
     {
-        /** @var SqidsManager $sqidsManager */
-        $sqidsManager = app(SqidsManager::class);
-        $coder = blank($sqidConfigName)
-            ? $sqidsManager->coderForDefaultConfig()
-            : $sqidsManager->coderForSqidConfigName($sqidConfigName);
-
-        return new static(
-            $numbers,
-            $coder,
-            $sqidsManager,
-        );
-    }
-
-    public function usingDefaultConfig(): static
-    {
-        return new static(
-            $this->numbers,
-            $this->sqidsManager->coderForDefaultConfig(),
-            $this->sqidsManager,
-        );
-    }
-
-    public function usingConfigName(string $configName): static
-    {
-        return new static(
-            $this->numbers,
-            $this->sqidsManager->coderForSqidConfigName($configName),
-            $this->sqidsManager,
-        );
-    }
-
-    public function usingConfig(SqidConfiguration $sqidConfiguration): static
-    {
-        return new static(
-            $this->numbers,
-            $this->sqidsManager->coderForSqidConfig($sqidConfiguration),
-            $this->sqidsManager,
-        );
+        return new static($numbers);
     }
 
     public function encode(): EncodedSqid
     {
-        return new EncodedSqid(
-            $this->encoder->encode($this->numbers),
-            $this->encoder,
-            $this->sqidsManager,
+        return $this->makeEncodedSqid(
+            $this->sqidder->encode($this->numbers())
         );
     }
 
@@ -92,5 +55,10 @@ class DecodedSqid implements EncodesSqids
         }
 
         return $number;
+    }
+
+    protected function makeEncodedSqid(string $id): EncodedSqid
+    {
+        return EncodedSqid::new($id);
     }
 }

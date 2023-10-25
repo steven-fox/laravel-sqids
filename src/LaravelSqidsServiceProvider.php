@@ -7,7 +7,7 @@ use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Sqids\SqidsInterface;
 use StevenFox\LaravelSqids\Config\ConfigRepository;
-use StevenFox\LaravelSqids\Contracts\SqidsManager;
+use StevenFox\LaravelSqids\Contracts\ConfigBasedSqidder;
 use StevenFox\LaravelSqids\Facades\Sqidder as SqidderFacade;
 use StevenFox\LaravelSqids\Factories\CoderFactory;
 
@@ -27,18 +27,15 @@ class LaravelSqidsServiceProvider extends PackageServiceProvider
         });
 
         $this->app->bind(Contracts\CoderFactory::class, function (Container $app) {
-            return new CoderFactory();
+            return new CoderFactory($app->make(Contracts\ConfigRepository::class));
         });
 
-        $this->app->singleton('sqidder', function (Container $app) {
-            return new Sqidder(
-                $app->make(Contracts\ConfigRepository::class),
-                $app->make(Contracts\CoderFactory::class),
-            );
+        $this->app->bind('sqidder', function (Container $app) {
+            return new Sqidder($app->make(Contracts\CoderFactory::class));
         });
 
-        $this->app->singleton(SqidsInterface::class, fn (Container $app) => $app['sqidder']);
-        $this->app->singleton(SqidsManager::class, fn (Container $app) => $app['sqidder']);
+        $this->app->bind(SqidsInterface::class, fn (Container $app) => $app['sqidder']);
+        $this->app->bind(ConfigBasedSqidder::class, fn (Container $app) => $app['sqidder']);
         $this->app->alias('sqidder', SqidderFacade::class);
     }
 
@@ -49,7 +46,7 @@ class LaravelSqidsServiceProvider extends PackageServiceProvider
             Contracts\CoderFactory::class,
             'sqidder',
             SqidsInterface::class,
-            SqidsManager::class,
+            ConfigBasedSqidder::class,
         ];
     }
 }
