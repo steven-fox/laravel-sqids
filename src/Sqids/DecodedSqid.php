@@ -9,6 +9,8 @@ class DecodedSqid
 {
     public const CONFIG_NAME = null;
 
+    public const ENCODED_SQID_CLASS = EncodedSqid::class;
+
     protected ConfigBasedSqidder $sqidder;
 
     public function __construct(
@@ -16,7 +18,7 @@ class DecodedSqid
         ConfigBasedSqidder $sqidder = null,
     ) {
         $sqidder ??= app(ConfigBasedSqidder::class);
-        $this->sqidder = $sqidder->forConfig(static::CONFIG_NAME);
+        $this->sqidder = $sqidder->forConfig($this->configName());
     }
 
     public static function new(int ...$numbers): static
@@ -57,8 +59,21 @@ class DecodedSqid
         return $number;
     }
 
+    protected function configName(): ?string
+    {
+        return static::CONFIG_NAME;
+    }
+
     protected function makeEncodedSqid(string $id): EncodedSqid
     {
-        return EncodedSqid::new($id);
+        return ($this->encodedSqidClass())::new($id);
+    }
+
+    /**
+     * @return class-string<EncodedSqid>
+     */
+    protected function encodedSqidClass(): string
+    {
+        return static::ENCODED_SQID_CLASS;
     }
 }

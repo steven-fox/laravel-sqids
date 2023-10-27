@@ -25,12 +25,15 @@ class EncodedSqid
         return new static($id);
     }
 
-    public function decode(bool $validate = true): DecodedSqid
+    public function decodeOrFail(): DecodedSqid
     {
-        if ($validate) {
-            $this->validate();
-        }
+        $this->validate();
 
+        return $this->decode();
+    }
+
+    public function decode(): DecodedSqid
+    {
         return $this->makeDecodedSqid(
             $this->sqidder->decode($this->id())
         );
@@ -51,7 +54,7 @@ class EncodedSqid
 
     public function canonical(): static
     {
-        return $this->decode(false)->encode();
+        return $this->decode()->encode();
     }
 
     public function isCanonical(): bool
@@ -67,7 +70,7 @@ class EncodedSqid
     public function decodesToBlank(): bool
     {
         return empty(
-            $this->decode(false)->numbers()
+            $this->decode()->numbers()
         );
     }
 
