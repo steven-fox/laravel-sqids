@@ -3,6 +3,7 @@
 namespace StevenFox\LaravelSqids;
 
 use Illuminate\Contracts\Container\Container;
+use Illuminate\Contracts\Support\DeferrableProvider;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Sqids\SqidsInterface;
@@ -11,7 +12,7 @@ use StevenFox\LaravelSqids\Contracts\ConfigBasedSqidder;
 use StevenFox\LaravelSqids\Facades\Sqidder as SqidderFacade;
 use StevenFox\LaravelSqids\Factories\CoderFactory;
 
-class LaravelSqidsServiceProvider extends PackageServiceProvider
+class LaravelSqidsServiceProvider extends PackageServiceProvider implements DeferrableProvider
 {
     public function configurePackage(Package $package): void
     {
