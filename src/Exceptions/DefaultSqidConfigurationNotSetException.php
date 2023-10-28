@@ -6,8 +6,8 @@ use Exception;
 
 class DefaultSqidConfigurationNotSetException extends Exception
 {
-    public static function make(): static
+    public static function make(): self
     {
-        return new static('The default Sqid configuration is not set.');
+        return new self('The default Sqid configuration is not set.');
     }
 }

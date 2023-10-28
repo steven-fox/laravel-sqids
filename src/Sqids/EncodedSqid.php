@@ -55,7 +55,7 @@ class EncodedSqid
         return $this;
     }
 
-    public function canonical(): static
+    public function canonical(): EncodedSqid
     {
         return $this->decode()->encode();
     }

@@ -6,8 +6,8 @@ use Exception;
 
 class NamedSqidConfigurationNotFoundException extends Exception
 {
-    public static function make(string $name): static
+    public static function make(string $name): self
     {
-        return new static("The Sqid configuration named [{$name}] was not found.");
+        return new self("The Sqid configuration named [{$name}] was not found.");
     }
 }
