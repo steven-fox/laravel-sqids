@@ -35,8 +35,8 @@ class LaravelSqidsServiceProvider extends PackageServiceProvider implements Defe
             return new Sqidder($app->make(Contracts\CoderFactory::class));
         });
 
-        $this->app->bind(SqidsInterface::class, fn (Container $app) => $app['sqidder']);
-        $this->app->bind(ConfigBasedSqidder::class, fn (Container $app) => $app['sqidder']);
+        $this->app->alias('sqidder', SqidsInterface::class);
+        $this->app->alias('sqidder', ConfigBasedSqidder::class);
         $this->app->alias('sqidder', SqidderFacade::class);
     }
 
