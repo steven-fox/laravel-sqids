@@ -7,13 +7,13 @@ use StevenFox\LaravelSqids\Exceptions\DecodedSqidCannotBeCastToIntException;
 
 class DecodedSqid
 {
-    public const CONFIG_NAME = null;
+    protected ?string $configName = null;
 
-    public const ENCODED_SQID_CLASS = EncodedSqid::class;
+    protected string $encodedSqidClass = EncodedSqid::class;
 
     protected ConfigBasedSqidder $sqidder;
 
-    public function __construct(
+    final public function __construct(
         protected array $numbers,
         ConfigBasedSqidder $sqidder = null,
     ) {
@@ -59,21 +59,24 @@ class DecodedSqid
         return $number;
     }
 
-    protected function configName(): ?string
+    public function configName(): ?string
     {
-        return static::CONFIG_NAME;
+        return $this->configName;
     }
 
-    protected function makeEncodedSqid(string $id): EncodedSqid
+    public function makeEncodedSqid(string $id): EncodedSqid
     {
-        return ($this->encodedSqidClass())::new($id);
+        /** @var class-string<EncodedSqid> $encodedSqidClass */
+        $encodedSqidClass = $this->encodedSqidClass();
+
+        return $encodedSqidClass::new($id);
     }
 
     /**
      * @return class-string<EncodedSqid>
      */
-    protected function encodedSqidClass(): string
+    public function encodedSqidClass(): string
     {
-        return static::ENCODED_SQID_CLASS;
+        return $this->encodedSqidClass;
     }
 }

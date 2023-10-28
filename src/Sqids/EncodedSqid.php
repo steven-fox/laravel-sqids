@@ -8,16 +8,19 @@ use StevenFox\LaravelSqids\Exceptions\EncodedSqidIsNotCanonicalException;
 
 class EncodedSqid
 {
-    public const CONFIG_NAME = null;
+    protected ?string $configName = null;
+
+    protected string $decodedSqidClass = DecodedSqid::class;
 
     protected ConfigBasedSqidder $sqidder;
 
-    public function __construct(
+    final public function __construct(
         protected string $id,
         ConfigBasedSqidder $sqidder = null,
     ) {
+        /** @var ?ConfigBasedSqidder $sqidder */
         $sqidder ??= app(ConfigBasedSqidder::class);
-        $this->sqidder = $sqidder->forConfig(static::CONFIG_NAME);
+        $this->sqidder = $sqidder->forConfig($this->configName());
     }
 
     public static function new(string $id): static
@@ -84,8 +87,24 @@ class EncodedSqid
         return $this->id();
     }
 
-    protected function makeDecodedSqid(array $numbers): DecodedSqid
+    public function configName(): ?string
     {
-        return DecodedSqid::newFromArray($numbers);
+        return $this->configName;
+    }
+
+    public function makeDecodedSqid(array $numbers): DecodedSqid
+    {
+        /** @var class-string<DecodedSqid> $decodedSqidClass */
+        $decodedSqidClass = $this->decodedSqidClass();
+
+        return $decodedSqidClass::newFromArray($numbers);
+    }
+
+    /**
+     * @return class-string<DecodedSqid>
+     */
+    public function decodedSqidClass(): string
+    {
+        return $this->decodedSqidClass;
     }
 }

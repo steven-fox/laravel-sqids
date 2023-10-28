@@ -7,7 +7,7 @@ use StevenFox\LaravelSqids\Sqids\EncodedSqid;
 it('can encode using the default configuration', function () {
     $sqid = new DecodedSqid([1]);
 
-    expect($sqid::CONFIG_NAME)->toBeNull();
+    expect($sqid->configName())->toBeNull();
 
     $encoded = $sqid->encode();
 
