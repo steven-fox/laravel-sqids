@@ -10,6 +10,7 @@ class EncodedSqid
 {
     protected ?string $configName = null;
 
+    /** @var class-string<DecodedSqid> */
     protected string $decodedSqidClass = DecodedSqid::class;
 
     protected ConfigBasedSqidder $sqidder;

@@ -2,11 +2,12 @@ includes:
     - phpstan-baseline.neon
 
 parameters:
-    level: 4
+    level: 6
     paths:
         - src
         - config
-    editorUrl: 'phpstorm://open?file=%%file%%&line=%%line%%'
+    editorUrl: '%%relFile%%:%%line%%'
+    editorUrlTitle: '%%relFile%%:%%line%%'
     tmpDir: build/phpstan
     checkOctaneCompatibility: true
     checkModelProperties: true
