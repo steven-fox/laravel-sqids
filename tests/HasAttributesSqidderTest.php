@@ -2,10 +2,10 @@
 
 use Illuminate\Database\Eloquent\Model;
 use StevenFox\LaravelSqids\ModelSqidders\ModelSqidder;
-use StevenFox\LaravelSqids\Traits\EncodesModelAttributesToSqid;
+use StevenFox\LaravelSqids\Traits\HasAttributesSqidder;
 
 it('has a sqidder method that returns a ModelSqidder by default', function () {
-    $model = new SqidModel();
+    $model = new HasAttributesSqidderModel();
 
     expect($model->sqidder())->toBeInstanceOf(ModelSqidder::class);
 });
@@ -13,40 +13,40 @@ it('has a sqidder method that returns a ModelSqidder by default', function () {
 test('the sqidder method can be overridden to provide a custom model sqidder', function () {
     $model = new CustomSqidderBySqidderMethodModel();
 
-    expect($model->sqidder())->toBeInstanceOf(CustomModelSqidder::class);
+    expect($model->sqidder())->toBeInstanceOf(HasAttributesSqidderTestCustomSqidder::class);
 });
 
 it('has a sqidderClass method that permits overriding the sqidder type', function () {
     $model = new CustomSqidderByClassNameSqidModel();
 
-    expect($model->sqidder())->toBeInstanceOf(CustomModelSqidder::class);
+    expect($model->sqidder())->toBeInstanceOf(HasAttributesSqidderTestCustomSqidder::class);
 });
 
-class SqidModel extends Model
+class HasAttributesSqidderModel extends Model
 {
-    use EncodesModelAttributesToSqid;
+    use HasAttributesSqidder;
 }
 
 class CustomSqidderByClassNameSqidModel extends Model
 {
-    use EncodesModelAttributesToSqid;
+    use HasAttributesSqidder;
 
     protected function sqidderClass(): string
     {
-        return CustomModelSqidder::class;
+        return HasAttributesSqidderTestCustomSqidder::class;
     }
 }
 
 class CustomSqidderBySqidderMethodModel extends Model
 {
-    use EncodesModelAttributesToSqid;
+    use HasAttributesSqidder;
 
     public function sqidder(): ModelSqidder
     {
-        return new CustomModelSqidder($this);
+        return new HasAttributesSqidderTestCustomSqidder($this);
     }
 }
 
-class CustomModelSqidder extends ModelSqidder
+class HasAttributesSqidderTestCustomSqidder extends ModelSqidder
 {
 }
