@@ -23,6 +23,9 @@ trait MakesEncodedAndDecodedSqidInstances
         return EncodedSqid::class;
     }
 
+    /**
+     * @param  array<int, int>  $numbers
+     */
     protected function makeDecodedSqid(array $numbers): DecodedSqid
     {
         /** @var class-string<DecodedSqid> $class */

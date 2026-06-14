@@ -10,21 +10,26 @@ class Sqidder implements ConfigBasedSqidder
     public function __construct(
         private Contracts\CoderFactory $coderFactory,
         private ?string $sqidConfigName = null,
-    ) {
-    }
+    ) {}
 
-    public function forConfig(string $name = null): static
+    public function forConfig(?string $name = null): static
     {
         $this->sqidConfigName = $name;
 
         return $this;
     }
 
+    /**
+     * @param  array<int, int>  $numbers
+     */
     public function encode(array $numbers): string
     {
         return $this->coder()->encode($numbers);
     }
 
+    /**
+     * @return array<int, int>
+     */
     public function decode(string $id): array
     {
         return $this->coder()->decode($id);

@@ -3,7 +3,11 @@
 namespace StevenFox\LaravelSqids\Traits;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @phpstan-require-extends Model
+ */
 trait EncodesModelAttributesToSqid
 {
     use HasAttributesSqidder;

@@ -14,9 +14,12 @@ class DecodedSqid
 
     protected ConfigBasedSqidder $sqidder;
 
+    /**
+     * @param  array<int, int>  $numbers
+     */
     final public function __construct(
         protected array $numbers,
-        ConfigBasedSqidder $sqidder = null,
+        ?ConfigBasedSqidder $sqidder = null,
     ) {
         $sqidder ??= app(ConfigBasedSqidder::class);
         $this->sqidder = $sqidder->forConfig($this->configName());
@@ -28,11 +31,11 @@ class DecodedSqid
     }
 
     /**
-     * @param  int[]  $numbers
+     * @param  array<int, int>  $numbers
      */
-    public static function newFromArray(array $numbers): static
+    public static function newFromArray(array $numbers, ?ConfigBasedSqidder $sqidder = null): static
     {
-        return new static($numbers);
+        return new static($numbers, $sqidder);
     }
 
     public function encode(): EncodedSqid
@@ -42,6 +45,9 @@ class DecodedSqid
         );
     }
 
+    /**
+     * @return array<int, int>
+     */
     public function numbers(): array
     {
         return $this->numbers;
@@ -70,7 +76,7 @@ class DecodedSqid
         /** @var class-string<EncodedSqid> $encodedSqidClass */
         $encodedSqidClass = $this->encodedSqidClass();
 
-        return $encodedSqidClass::new($id);
+        return $encodedSqidClass::new($id, $this->sqidder);
     }
 
     /**

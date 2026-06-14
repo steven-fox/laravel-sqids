@@ -40,6 +40,9 @@ class LaravelSqidsServiceProvider extends PackageServiceProvider implements Defe
         $this->app->alias('sqidder', SqidderFacade::class);
     }
 
+    /**
+     * @return array<int, class-string|string>
+     */
     public function provides(): array
     {
         return [

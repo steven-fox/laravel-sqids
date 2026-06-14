@@ -17,16 +17,16 @@ class EncodedSqid
 
     final public function __construct(
         protected string $id,
-        ConfigBasedSqidder $sqidder = null,
+        ?ConfigBasedSqidder $sqidder = null,
     ) {
         /** @var ?ConfigBasedSqidder $sqidder */
         $sqidder ??= app(ConfigBasedSqidder::class);
         $this->sqidder = $sqidder->forConfig($this->configName());
     }
 
-    public static function new(string $id): static
+    public static function new(string $id, ?ConfigBasedSqidder $sqidder = null): static
     {
-        return new static($id);
+        return new static($id, $sqidder);
     }
 
     public function decodeOrFail(): DecodedSqid
@@ -93,12 +93,15 @@ class EncodedSqid
         return $this->configName;
     }
 
+    /**
+     * @param  array<int, int>  $numbers
+     */
     public function makeDecodedSqid(array $numbers): DecodedSqid
     {
         /** @var class-string<DecodedSqid> $decodedSqidClass */
         $decodedSqidClass = $this->decodedSqidClass();
 
-        return $decodedSqidClass::newFromArray($numbers);
+        return $decodedSqidClass::newFromArray($numbers, $this->sqidder);
     }
 
     /**

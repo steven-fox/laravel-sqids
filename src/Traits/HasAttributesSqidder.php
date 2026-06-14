@@ -2,8 +2,12 @@
 
 namespace StevenFox\LaravelSqids\Traits;
 
+use Illuminate\Database\Eloquent\Model;
 use StevenFox\LaravelSqids\ModelSqidders\ModelSqidder;
 
+/**
+ * @phpstan-require-extends Model
+ */
 trait HasAttributesSqidder
 {
     /**
