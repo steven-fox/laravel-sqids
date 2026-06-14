@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use StevenFox\LaravelSqids\Exceptions\CannotDecodeSqidToAttributesArray;
 
+/**
+ * @phpstan-require-extends Model
+ */
 trait ResolvesRouteBindingWithSqid
 {
     use MakesEncodedAndDecodedSqidInstances;

@@ -9,9 +9,7 @@ use StevenFox\LaravelSqids\Exceptions\NamedSqidConfigurationNotFoundException;
 
 readonly class ConfigRepository implements ConfigRepositoryInterface
 {
-    public function __construct(private Repository $config)
-    {
-    }
+    public function __construct(private Repository $config) {}
 
     public function hasSqidConfig(string $name): bool
     {

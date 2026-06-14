@@ -17,9 +17,7 @@ class ModelSqidder
 {
     use MakesEncodedAndDecodedSqidInstances;
 
-    public function __construct(protected Model $model)
-    {
-    }
+    public function __construct(protected Model $model) {}
 
     /**
      * @return TEncodedSqid

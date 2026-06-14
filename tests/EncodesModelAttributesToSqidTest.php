@@ -18,13 +18,13 @@ it('the sqid attribute will use a custom model sqidder', function () {
 });
 
 it('will append the sqid on the model by default', function () {
-    $model = new SqidModel();
+    $model = new SqidModel;
 
     expect($model->hasAppended('sqid'))->toBeTrue();
 });
 
 it('appending the sqid can be overridden', function () {
-    $model = new NonAppendingModel();
+    $model = new NonAppendingModel;
 
     expect($model->hasAppended('sqid'))->toBeFalse();
 });

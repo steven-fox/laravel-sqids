@@ -10,7 +10,7 @@ beforeEach(function () {
 });
 
 it('implements the ConfigRepository interface', function () {
-    expect($this->repo)->toBeInstanceOf(\StevenFox\LaravelSqids\Contracts\ConfigRepository::class);
+    expect($this->repo)->toBeInstanceOf(StevenFox\LaravelSqids\Contracts\ConfigRepository::class);
 });
 
 it('can determine if a sqid config exists for a given name', function () {
