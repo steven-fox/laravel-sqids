@@ -10,7 +10,7 @@ beforeEach(function () {
 });
 
 it('implements the CoderFactory interface', function () {
-    expect($this->factory)->toBeInstanceOf(\StevenFox\LaravelSqids\Contracts\CoderFactory::class);
+    expect($this->factory)->toBeInstanceOf(StevenFox\LaravelSqids\Contracts\CoderFactory::class);
 });
 
 it('can make a SqidsInterface instance for a SqidConfiguration', function () {

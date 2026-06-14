@@ -12,8 +12,7 @@ class CoderFactory implements CoderFactoryInterface
 {
     public function __construct(
         private ConfigRepository $configRepository
-    ) {
-    }
+    ) {}
 
     public function forConfig(SqidConfiguration $config): SqidsInterface
     {

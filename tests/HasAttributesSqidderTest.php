@@ -5,19 +5,19 @@ use StevenFox\LaravelSqids\ModelSqidders\ModelSqidder;
 use StevenFox\LaravelSqids\Traits\HasAttributesSqidder;
 
 it('has a sqidder method that returns a ModelSqidder by default', function () {
-    $model = new HasAttributesSqidderModel();
+    $model = new HasAttributesSqidderModel;
 
     expect($model->sqidder())->toBeInstanceOf(ModelSqidder::class);
 });
 
 test('the sqidder method can be overridden to provide a custom model sqidder', function () {
-    $model = new CustomSqidderBySqidderMethodModel();
+    $model = new CustomSqidderBySqidderMethodModel;
 
     expect($model->sqidder())->toBeInstanceOf(HasAttributesSqidderTestCustomSqidder::class);
 });
 
 it('has a sqidderClass method that permits overriding the sqidder type', function () {
-    $model = new CustomSqidderByClassNameSqidModel();
+    $model = new CustomSqidderByClassNameSqidModel;
 
     expect($model->sqidder())->toBeInstanceOf(HasAttributesSqidderTestCustomSqidder::class);
 });
@@ -47,6 +47,4 @@ class CustomSqidderBySqidderMethodModel extends Model
     }
 }
 
-class HasAttributesSqidderTestCustomSqidder extends ModelSqidder
-{
-}
+class HasAttributesSqidderTestCustomSqidder extends ModelSqidder {}

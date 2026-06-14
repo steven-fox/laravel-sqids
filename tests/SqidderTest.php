@@ -49,6 +49,6 @@ it('will use the default config when a null value is passed to the forConfig met
 });
 
 it('has a facade', function () {
-    expect(\StevenFox\LaravelSqids\Facades\Sqidder::getFacadeRoot())
+    expect(StevenFox\LaravelSqids\Facades\Sqidder::getFacadeRoot())
         ->toBeInstanceOf(Sqidder::class);
 });

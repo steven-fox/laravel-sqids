@@ -9,13 +9,13 @@ use StevenFox\LaravelSqids\Sqidder;
 it('binds the config repository to the app container', function () {
     expect(app(ConfigRepository::class))
         ->toBeInstanceOf(ConfigRepository::class)
-        ->toBeInstanceOf(\StevenFox\LaravelSqids\Config\ConfigRepository::class);
+        ->toBeInstanceOf(StevenFox\LaravelSqids\Config\ConfigRepository::class);
 });
 
 it('binds the coder factory to the app container', function () {
     expect(app(CoderFactory::class))
         ->toBeInstanceOf(CoderFactory::class)
-        ->toBeInstanceOf(\StevenFox\LaravelSqids\Factories\CoderFactory::class);
+        ->toBeInstanceOf(StevenFox\LaravelSqids\Factories\CoderFactory::class);
 });
 
 it('binds a Sqidder to the app container via the "sqidder" name', function () {
